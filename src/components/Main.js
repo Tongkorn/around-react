@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Cards from './Cards';
 // import {api} from '../utils/Api';
 
 function Main(props) {
@@ -6,7 +7,6 @@ function Main(props) {
     const [userDescription, setUserDescription] = useState()
     const [userAvatar, setUserAvatar] = useState()
     const [cards, setCards] = useState([])
-
 
     const avatar = {
         backgroundImage: `url(${userAvatar})`
@@ -50,28 +50,6 @@ function Main(props) {
         return () => { }
     }, [])
 
-    function RenderCards() {
-        console.log(cards)
-        return (
-            <>
-                {cards.map((card, _id) =>
-                    <article className="card" key={_id} >
-                        <img src={`${card.link}`} alt="untitled image" className="card__pic" />
-                        <button type="button" className="card__delete" aria-label="delete-card"></button>
-                        <div className="card__content">
-                            <h2 className="card__title">{card.name}</h2>
-                            <div className="card__like-container">
-                                <button type="button" className="card__like-btn" aria-label="like">
-                                </button>
-                                <p className="card__like-total">{card.likes.length}</p>
-                            </div>
-                        </div>
-                    </article >
-                )}
-            </>
-        )
-    }
-
     return (
         <main className="content">
             <section className="profile">
@@ -93,23 +71,10 @@ function Main(props) {
                 </button>
             </section>``
             <section className="cards" >
-                <RenderCards />
+                {cards.map((card, index) =>
+                    <Cards card={card} key={index} onCardClick={props.onCardClick} />
+                )}
             </section>
-            {/* <template id="card-template">
-                <article className="card">
-                    <img src={`<%'https://picsum.photos/400'%>`} alt="untitled image" className="card__pic" />
-                    <button type="button" className="card__delete" aria-label="delete-card"></button>
-                    <div className="card__content">
-                        <h2 className="card__title">{card.name}</h2>
-                        <div className="card__like-container">
-                            <button type="button" className="card__like-btn" aria-label="like">
-                            </button>
-                            <p className="card__like-total">{card.likes}</p>
-                        </div>
-                    </div>
-                </article>
-            </template> */}
-
         </main>
     )
 }
