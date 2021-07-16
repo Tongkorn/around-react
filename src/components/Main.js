@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Cards from './Cards';
-// import {api} from '../utils/Api';
+import api from '../utils/api';
 
 function Main(props) {
     const [userName, setUserName] = useState()
@@ -13,40 +13,24 @@ function Main(props) {
     }
 
     useEffect(() => {
-        fetch('https://around.nomoreparties.co/v1/group-12/users/me', {
-            method: "GET",
-            headers: {
-                authorization: "e09604a5-57aa-4b20-9a83-ea66e5c6924b",
-                "Content-Type": "application/json"
-            }
-        }).then(res => {
-            if (res.ok) {
-                return res.json()
-            }
-            return Promise.reject(`Error:${res.status}`)
-        }).then(res => {
-            setUserName(res.name);
-            setUserAvatar(res.avatar)
-            setUserDescription(res.about)
-        })
+        api.getUserData()
+            .then((data) => {
+                setUserName(data.name);
+                setUserAvatar(data.avatar)
+                setUserDescription(data.about)
+            }).catch(error => {
+                return (`Error: ${error}`)
+            })
         return () => { }
     }, [])
 
     useEffect(() => {
-        fetch('https://around.nomoreparties.co/v1/group-12/cards', {
-            method: "GET",
-            headers: {
-                authorization: "e09604a5-57aa-4b20-9a83-ea66e5c6924b",
-                "Content-Type": "application/json"
-            }
-        }).then(res => {
-            if (res.ok) {
-                return res.json()
-            }
-            return Promise.reject(`Error:${res.status}`)
-        }).then(res => {
-            setCards([...res, ...cards])
-        })
+        api.getInitialCards()
+            .then((data) => {
+                setCards([...data, ...cards])
+            }).catch(error => {
+                return (`Error: ${error}`)
+            })
         return () => { }
     }, [])
 
@@ -72,7 +56,7 @@ function Main(props) {
             </section>``
             <section className="cards" >
                 {cards.map((card, index) =>
-                    <Cards card={card} key={index} onCardClick={props.onCardClick} />
+                    <Cards card={card} key={index} onCardClick={props.onCardClick} onDeletePlaceClick={props.onDeletePlaceClick} />
                 )}
             </section>
         </main>

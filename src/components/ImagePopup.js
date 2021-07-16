@@ -1,7 +1,6 @@
 import React from 'react';
 
 function ImagePopup(props) {
-    console.log(props.selectedCard)
     return (
         <div className={`popup ${props.isOpen ? 'popup_opened' : ''} `} data-image="popup__view_image">
             <figure className="popup__card">

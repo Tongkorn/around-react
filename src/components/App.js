@@ -3,7 +3,7 @@ import Main from './Main'
 import Footer from './Footer'
 import { EditProfilePopup, AddPlacePopup, DeletePlacePopup, EditAvatarPopup } from './PopupWithForm'
 import ImagePopup from './ImagePopup'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false)
@@ -14,20 +14,21 @@ function App() {
   const [selectedCard, setSelectedCard] = useState('')
 
   function handleEditAvatarClick() {
-    setIsEditAvatarPopupOpen(!isEditAvatarPopupOpen)
+    setIsEditAvatarPopupOpen(true)
   };
   function handleEditProfileClick() {
-    setIsEditProfilePopupOpen(!isEditProfilePopupOpen)
+    setIsEditProfilePopupOpen(true)
   }
   function handleAddPlaceClick() {
-    setIsAddPlacePopupOpen(!isAddPlacePopupOpen)
+    setIsAddPlacePopupOpen(true)
   }
   function handleCardClick(selectedCardProps) {
-    setIsCardPopupOpen(!isCardPopupOpen)
+    setIsCardPopupOpen(true)
     setSelectedCard(selectedCardProps.link)
   }
-  function handleDeletePlaceClick() {
-    setIsDeletePlacePopupOpen(!isDeletePlacePopupOpen)
+  function handleDeletePlaceClick(selectedCardProps) {
+    setIsDeletePlacePopupOpen(true)
+    setSelectedCard(selectedCardProps._id)
   }
   function closeAllPopups() {
     setIsEditAvatarPopupOpen(false)
@@ -37,6 +38,25 @@ function App() {
     setIsDeletePlacePopupOpen(false)
     setSelectedCard('')
   }
+  function handleEscClose(event) {
+    if (event.key === "Escape") closeAllPopups()
+  }
+
+  useEffect(() => {
+    document.onclick = (arg) => {
+      if (arg.target.classList.contains('popup_opened')) closeAllPopups()
+    }
+    return () => {
+
+    }
+  }, [])
+
+  useEffect(() => {
+    window.addEventListener("keydown", handleEscClose)
+    return () => {
+      window.removeEventListener("keydown", handleEscClose)
+    }
+  }, [])
 
   return (
     <div className="root">
@@ -44,7 +64,7 @@ function App() {
         <Header />
         <Main onEditProfileClick={handleEditProfileClick} onAddPlaceClick={handleAddPlaceClick} onEditAvatarClick={handleEditAvatarClick} onDeletePlaceClick={handleDeletePlaceClick} onCardClick={handleCardClick} />
         <Footer />
-        <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} />
+        <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} on />
         <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} />
         <DeletePlacePopup isOpen={isDeletePlacePopupOpen} onClose={closeAllPopups} />
         <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} />
