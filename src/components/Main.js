@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Cards from './Cards';
+import Card from './Card';
 import api from '../utils/api';
 
 function Main(props) {
@@ -56,7 +56,7 @@ function Main(props) {
             </section>``
             <section className="cards" >
                 {cards.map((card, index) =>
-                    <Cards card={card} key={index} onCardClick={props.onCardClick} onDeletePlaceClick={props.onDeletePlaceClick} />
+                    <Card card={card} key={index} onCardClick={props.onCardClick} onDeletePlaceClick={props.onDeletePlaceClick} />
                 )}
             </section>
         </main>
