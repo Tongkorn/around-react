@@ -1,4 +1,4 @@
-export default class api {
+class api {
     constructor(urlToRequestedResource, optionsObj) {
         this.url = urlToRequestedResource;
         this.options = optionsObj;
@@ -9,23 +9,12 @@ export default class api {
         return fetch(`${this.url}${this.groupId}/users/me`,
             this.options
         )
-            .then(res => {
-                if (res.ok) {
-                    return res.json()
-                }
-                // if the this.url returns an error, reject the promise
-                return Promise.reject(`Error:${res.status}`)
-            })
+            .then((res) => res.ok ? res.json() : Promise.reject(`Error:${res.status}`))
     }
 
     getInitialCards() {
         return fetch(`${this.url}/${this.groupId}/cards`, this.options)
-            .then(res => {
-                if (res.ok) {
-                    return res.json()
-                }
-                return Promise.reject(`Error:${res.status}`)
-            })
+            .then(res => res.ok ? res.json() : Promise.reject(`Error:${res.status}`))
     }
 
     updateUser(userData) {
@@ -37,12 +26,7 @@ export default class api {
                 about: userData.about
             })
         })
-            .then(res => {
-                if (res.ok) {
-                    return res.json()
-                }
-                return Promise.reject(`Error:${res.status}`)
-            })
+            .then(res => res.ok ? res.json() : Promise.reject(`Error:${res.status}`))
     }
 
     addCard(cardData) {
@@ -54,12 +38,7 @@ export default class api {
                 link: cardData.link,
             })
         })
-            .then(res => {
-                if (res.ok) {
-                    return res.json()
-                }
-                return Promise.reject(`Error:${res.status}`)
-            })
+            .then(res => res.ok ? res.json() : Promise.reject(`Error:${res.status}`))
     }
 
     deleteCard(cardId) {
@@ -67,12 +46,7 @@ export default class api {
             method: "DELETE",
             headers: this.options.headers
         })
-            .then(res => {
-                if (res.ok) {
-                    return res.json()
-                }
-                return Promise.reject(`Error:${res.status}`)
-            })
+            .then(res => res.ok ? res.json() : Promise.reject(`Error:${res.status}`))
     }
 
     addLike(cardId) {
@@ -80,12 +54,7 @@ export default class api {
             method: "PUT",
             headers: this.options.headers
         })
-            .then(res => {
-                if (res.ok) {
-                    return res.json()
-                }
-                return Promise.reject(`Error:${res.status}`)
-            })
+            .then(res => res.ok ? res.json() : Promise.reject(`Error:${res.status}`))
     }
 
     removeLike(cardId) {
@@ -93,12 +62,7 @@ export default class api {
             method: "DELETE",
             headers: this.options.headers
         })
-            .then(res => {
-                if (res.ok) {
-                    return res.json()
-                }
-                return Promise.reject(`Error:${res.status}`)
-            })
+            .then(res => res.ok ? res.json() : Promise.reject(`Error:${res.status}`))
     }
 
     changeProfilePic(avatarLink) {
@@ -109,12 +73,7 @@ export default class api {
                 avatar: avatarLink.avatar
             }),
         })
-            .then(res => {
-                if (res.ok) {
-                    return res.json()
-                }
-                return Promise.reject(`Error:${res.status}`)
-            })
+            .then(res => res.ok ? res.json() : Promise.reject(`Error:${res.status}`))
     }
 }
 

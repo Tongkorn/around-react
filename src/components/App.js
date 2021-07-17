@@ -1,7 +1,10 @@
 import Header from './Header'
 import Main from './Main'
 import Footer from './Footer'
-import { EditProfilePopup, AddPlacePopup, DeletePlacePopup, EditAvatarPopup } from './PopupWithForm'
+import EditProfilePopup from './EditProfilePopup'
+import AddPlacePopup from './AddPlacePopup'
+import DeletePlacePopup from './DeletePlacePopup'
+import EditAvatarPopup from './EditAvatarPopup'
 import ImagePopup from './ImagePopup'
 import { useState, useEffect } from 'react'
 
@@ -11,7 +14,7 @@ function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false)
   const [isCardPopupOpen, setIsCardPopupOpen] = useState(false)
   const [isDeletePlacePopupOpen, setIsDeletePlacePopupOpen] = useState(false)
-  const [selectedCard, setSelectedCard] = useState('')
+  const [selectedCard, setSelectedCard] = useState(null)
 
   function handleEditAvatarClick() {
     setIsEditAvatarPopupOpen(true)
@@ -36,27 +39,29 @@ function App() {
     setIsAddPlacePopupOpen(false)
     setIsCardPopupOpen(false)
     setIsDeletePlacePopupOpen(false)
-    setSelectedCard('')
+    setSelectedCard(null)
   }
   function handleEscClose(event) {
     if (event.key === "Escape") closeAllPopups()
   }
 
-  useEffect(() => {
-    document.onclick = (arg) => {
-      if (arg.target.classList.contains('popup_opened')) closeAllPopups()
-    }
-    return () => {
+  function handleOverlayClick(event) {
+    if (event.target.classList.contains('popup_opened')) closeAllPopups()
+  }
 
+  useEffect(() => {
+    document.addEventListener('click', handleOverlayClick)
+    return () => {
+      document.removeEventListener('click', handleOverlayClick)
     }
-  }, [])
+  })
 
   useEffect(() => {
     window.addEventListener("keydown", handleEscClose)
     return () => {
       window.removeEventListener("keydown", handleEscClose)
     }
-  }, [])
+  })
 
   return (
     <div className="root">
@@ -73,8 +78,6 @@ function App() {
       {/* <div className="loading">
         <div className="loading__logo"></div>
       </div> */}
-
-
     </div>
   );
 }
