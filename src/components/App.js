@@ -7,6 +7,8 @@ import DeletePlacePopup from './DeletePlacePopup'
 import EditAvatarPopup from './EditAvatarPopup'
 import ImagePopup from './ImagePopup'
 import { useState, useEffect } from 'react'
+import { CurrentUserContext } from '../contexts/CurrentUserContext'
+import { apiInstance } from '../utils/api'
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false)
@@ -15,6 +17,7 @@ function App() {
   const [isCardPopupOpen, setIsCardPopupOpen] = useState(false)
   const [isDeletePlacePopupOpen, setIsDeletePlacePopupOpen] = useState(false)
   const [selectedCard, setSelectedCard] = useState(null)
+  const [currentUser, setCurrentUser] = useState({ name: 'Loading...', about: 'Loading...', avatar: '' })
 
   function handleEditAvatarClick() {
     setIsEditAvatarPopupOpen(true)
@@ -63,11 +66,22 @@ function App() {
     }
   })
 
+  useEffect(() => {
+    apiInstance.getUserData()
+      .then((data) => {
+        setCurrentUser(data)
+      }).catch(error => {
+        return (`Error: ${error}`)
+      })
+  }, [])
+
   return (
     <div className="root">
       <div className="root__container">
         <Header />
-        <Main onEditProfileClick={handleEditProfileClick} onAddPlaceClick={handleAddPlaceClick} onEditAvatarClick={handleEditAvatarClick} onDeletePlaceClick={handleDeletePlaceClick} onCardClick={handleCardClick} />
+        <CurrentUserContext.Provider value={currentUser}>
+          <Main onEditProfileClick={handleEditProfileClick} onAddPlaceClick={handleAddPlaceClick} onEditAvatarClick={handleEditAvatarClick} onDeletePlaceClick={handleDeletePlaceClick} onCardClick={handleCardClick} />
+        </CurrentUserContext.Provider>
         <Footer />
         <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} on />
         <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} />
