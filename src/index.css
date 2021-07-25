@@ -1,4 +1,3 @@
-
 @import url(./vendor/normalize.css);
 @import url(./vendor/fonts.css);
 @import url(./blocks/root/root.css);
@@ -47,6 +46,8 @@
 @import url(./blocks/card/__title/card__title.css);
 @import url(./blocks/card/__like-btn/card__like-btn.css);
 @import url(./blocks/card/__like-btn/_active/card__like_active.css);
-@import url(./blocks/card/__delete/card__delete.css);
+@import url(./blocks/card/__delete-button/card__delete-button.css);
+@import url(./blocks/card/__delete-button/_visible/card__delete-button_visible.css);
+@import url(./blocks/card/__delete-button/_hidden/card__delete-button_hidden.css);
 @import url(./blocks/card/__like-container/card__like-container.css);
 @import url(./blocks/card/__like-total/card__like-total.css);
