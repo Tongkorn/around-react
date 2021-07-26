@@ -3,7 +3,7 @@ import Card from './Card';
 import { apiInstance } from '../utils/api'
 import { CurrentUserContext } from '../contexts/CurrentUserContext'
 
-function Main({ onEditAvatarClick, onEditProfileClick, onAddPlaceClick, onCardClick, onDeletePlaceClick }) {
+function Main({ onEditAvatarClick, onEditProfileClick, onAddPlaceClick, onCardClick }) {
     const [cards, setCards] = useState([])
     const currentUser = React.useContext(CurrentUserContext)
     const currentUserAvatar = {
@@ -18,6 +18,20 @@ function Main({ onEditAvatarClick, onEditProfileClick, onAddPlaceClick, onCardCl
                 return (`Error: ${error}`)
             })
     }, [setCards])
+
+    function handleCardLike(card) {
+        const isLiked = card.likes.some(i => i._id === currentUser._id)
+        isLiked ? apiInstance.removeLike(card._id).then((newCard) => {
+            setCards((state) => state.map((c) => c._id === card._id ? newCard : c))
+        }) : apiInstance.addLike(card._id).then((newCard) => {
+            setCards((state) => state.map((c) => c._id === card._id ? newCard : c))
+        })
+    }
+    function handleCardDelete(card) {
+        apiInstance.deleteCard(card._id).then(() => {
+            setCards((state) => state.filter((c) => c._id !== card._id))
+        })
+    }
 
     return (
         <main className="content">
@@ -41,9 +55,8 @@ function Main({ onEditAvatarClick, onEditProfileClick, onAddPlaceClick, onCardCl
             </section>
             <section className="cards" >
                 {cards.map((card) => (
-                    <Card cardInfo={card} key={card._id} onCardClick={onCardClick} onDeletePlaceClick={onDeletePlaceClick} />
-                )
-                )}
+                    <Card cardInfo={card} key={card._id} onCardClick={onCardClick} onCardLike={handleCardLike} onCardDelete={handleCardDelete} />
+                ))}
             </section>
         </main>
     )

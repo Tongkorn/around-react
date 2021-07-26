@@ -14,11 +14,11 @@
   transition: opacity 0.3s ease-in-out;
 }
 
-.card__delete:hover {
+.card__delete-button:hover {
   opacity: 0.6;
   cursor: pointer;
 }
 
-.card__delete:focus {
+.card__delete-button:focus {
   outline: none;
 }

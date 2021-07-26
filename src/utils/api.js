@@ -65,7 +65,7 @@ class api {
             .then(res => res.ok ? res.json() : Promise.reject(`Error:${res.status}`))
     }
 
-    changeProfilePic(avatarLink) {
+    setUserAvatar(avatarLink) {
         return fetch(`${this.url}/${this.groupId}/users/me/avatar`, {
             method: "PATCH",
             headers: this.options.headers,

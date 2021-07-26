@@ -51,6 +51,18 @@ function App() {
   function handleOverlayClick(event) {
     if (event.target.classList.contains('popup_opened')) closeAllPopups()
   }
+  function handleUpdateUser(event) {
+    apiInstance.updateUser(event).then((res) => {
+      setCurrentUser(res)
+      closeAllPopups()
+    })
+  }
+  function handleUpdateAvatar(event) {
+    apiInstance.setUserAvatar(event).then((res) => {
+      setCurrentUser(res)
+      closeAllPopups()
+    })
+  }
 
   useEffect(() => {
     document.addEventListener('click', handleOverlayClick)
@@ -83,10 +95,12 @@ function App() {
           <Main onEditProfileClick={handleEditProfileClick} onAddPlaceClick={handleAddPlaceClick} onEditAvatarClick={handleEditAvatarClick} onDeletePlaceClick={handleDeletePlaceClick} onCardClick={handleCardClick} />
         </CurrentUserContext.Provider>
         <Footer />
-        <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} on />
-        <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} />
-        <DeletePlacePopup isOpen={isDeletePlacePopupOpen} onClose={closeAllPopups} />
-        <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} />
+        <CurrentUserContext.Provider value={currentUser}>
+          <EditProfilePopup name={currentUser.name} description={currentUser.about} isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} />
+          <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} />
+          <DeletePlacePopup isOpen={isDeletePlacePopupOpen} onClose={closeAllPopups} />
+          <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar} />
+        </CurrentUserContext.Provider >
         <ImagePopup isOpen={isCardPopupOpen} onClose={closeAllPopups} selectedCard={selectedCard} />
       </div>
       {/* <div className="loading">
