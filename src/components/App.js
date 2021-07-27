@@ -18,6 +18,7 @@ function App() {
   const [isDeletePlacePopupOpen, setIsDeletePlacePopupOpen] = useState(false)
   const [selectedCard, setSelectedCard] = useState(null)
   const [currentUser, setCurrentUser] = useState({ name: 'Loading...', about: 'Loading...', avatar: '' })
+  const [cards, setCards] = useState([])
 
   function handleEditAvatarClick() {
     setIsEditAvatarPopupOpen(true)
@@ -47,21 +48,47 @@ function App() {
   function handleEscClose(event) {
     if (event.key === "Escape") closeAllPopups()
   }
-
   function handleOverlayClick(event) {
     if (event.target.classList.contains('popup_opened')) closeAllPopups()
   }
   function handleUpdateUser(event) {
-    apiInstance.updateUser(event).then((res) => {
-      setCurrentUser(res)
+    apiInstance.updateUser(event).then((user) => {
+      setCurrentUser(user)
       closeAllPopups()
-    })
+    }).catch(error => {
+      return (`Error: ${error}`)
+    }).finally(() => closeAllPopups())
   }
   function handleUpdateAvatar(event) {
-    apiInstance.setUserAvatar(event).then((res) => {
-      setCurrentUser(res)
-      closeAllPopups()
+    apiInstance.setUserAvatar(event).then((user) => {
+      setCurrentUser(user)
+    }).catch(error => {
+      return (`Error: ${error}`)
+    }).finally(() => closeAllPopups())
+  }
+  function handleCardLike({ likes, _id }) {
+    const isLiked = likes.some(i => i._id === currentUser._id)
+    isLiked ? apiInstance.removeLike(_id).then((newCard) => {
+      setCards((state) => state.map((c) => c._id === _id ? newCard : c))
+    }) : apiInstance.addLike(_id).then((newCard) => {
+      setCards((state) => state.map((c) => c._id === _id ? newCard : c))
+    }).catch(error => {
+      return (`Error: ${error}`)
     })
+  }
+  function handleCardDelete({ _id }) {
+    apiInstance.deleteCard(_id).then(() => {
+      setCards((state) => state.filter((c) => c._id !== _id))
+    }).catch(error => {
+      return (`Error: ${error}`)
+    })
+  }
+  function handleAddPlaceSubmit({ name, link }) {
+    apiInstance.addCard({ name, link }).then((newCard) => {
+      setCards([newCard, ...cards])
+    }).catch(error => {
+      return (`Error: ${error}`)
+    }).finally(() => closeAllPopups())
   }
 
   useEffect(() => {
@@ -79,6 +106,15 @@ function App() {
   })
 
   useEffect(() => {
+    apiInstance.getInitialCards()
+      .then((data) => {
+        setCards([...data, ...cards])
+      }).catch(error => {
+        return (`Error: ${error}`)
+      })
+  }, [setCards])
+
+  useEffect(() => {
     apiInstance.getUserData()
       .then((data) => {
         setCurrentUser(data)
@@ -92,12 +128,12 @@ function App() {
       <div className="root__container">
         <Header />
         <CurrentUserContext.Provider value={currentUser}>
-          <Main onEditProfileClick={handleEditProfileClick} onAddPlaceClick={handleAddPlaceClick} onEditAvatarClick={handleEditAvatarClick} onDeletePlaceClick={handleDeletePlaceClick} onCardClick={handleCardClick} />
+          <Main onEditProfileClick={handleEditProfileClick} onAddPlaceClick={handleAddPlaceClick} onEditAvatarClick={handleEditAvatarClick} onDeletePlaceClick={handleDeletePlaceClick} onCardClick={handleCardClick} onCardDelete={handleCardDelete} onCardLike={handleCardLike} cards={cards} />
         </CurrentUserContext.Provider>
         <Footer />
         <CurrentUserContext.Provider value={currentUser}>
           <EditProfilePopup name={currentUser.name} description={currentUser.about} isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} />
-          <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} />
+          <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddPlaceSubmit={handleAddPlaceSubmit} />
           <DeletePlacePopup isOpen={isDeletePlacePopupOpen} onClose={closeAllPopups} />
           <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar} />
         </CurrentUserContext.Provider >
