@@ -87,3 +87,4 @@ const apiInstance = new Api("https://around.nomoreparties.co/v1/", {
 })
 
 export default apiInstance
+// test
