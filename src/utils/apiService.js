@@ -1,4 +1,4 @@
-class Api {
+class ApiService {
     constructor(urlToRequestedResource, optionsObj) {
         this.url = urlToRequestedResource;
         this.options = optionsObj;
@@ -78,7 +78,7 @@ class Api {
     }
 }
 
-const apiInstance = new Api("https://around.nomoreparties.co/v1/", {
+const apiInstance = new ApiService("https://around.nomoreparties.co/v1/", {
     method: "GET",
     headers: {
         authorization: "e09604a5-57aa-4b20-9a83-ea66e5c6924b",
