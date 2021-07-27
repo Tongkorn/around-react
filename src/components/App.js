@@ -8,7 +8,7 @@ import EditAvatarPopup from './EditAvatarPopup'
 import ImagePopup from './ImagePopup'
 import { useState, useEffect } from 'react'
 import { CurrentUserContext } from '../contexts/CurrentUserContext'
-import api from '../utils/ApiService'
+import api from '../utils/Api'
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false)
