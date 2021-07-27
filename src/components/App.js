@@ -8,7 +8,7 @@ import EditAvatarPopup from './EditAvatarPopup'
 import ImagePopup from './ImagePopup'
 import { useState, useEffect } from 'react'
 import { CurrentUserContext } from '../contexts/CurrentUserContext'
-import  apiInstance  from '../utils/Api'
+import  api  from '../utils/Api'
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false)
@@ -52,7 +52,7 @@ function App() {
     if (event.target.classList.contains('popup_opened')) closeAllPopups()
   }
   function handleUpdateUser(event) {
-    apiInstance.updateUser(event).then((user) => {
+    api.updateUser(event).then((user) => {
       setCurrentUser(user)
       closeAllPopups()
     }).catch(error => {
@@ -60,7 +60,7 @@ function App() {
     }).finally(() => closeAllPopups())
   }
   function handleUpdateAvatar(event) {
-    apiInstance.setUserAvatar(event).then((user) => {
+    api.setUserAvatar(event).then((user) => {
       setCurrentUser(user)
     }).catch(error => {
       return (`Error: ${error}`)
@@ -68,23 +68,23 @@ function App() {
   }
   function handleCardLike({ likes, _id }) {
     const isLiked = likes.some(i => i._id === currentUser._id)
-    isLiked ? apiInstance.removeLike(_id).then((newCard) => {
+    isLiked ? api.removeLike(_id).then((newCard) => {
       setCards((state) => state.map((c) => c._id === _id ? newCard : c))
-    }) : apiInstance.addLike(_id).then((newCard) => {
+    }) : api.addLike(_id).then((newCard) => {
       setCards((state) => state.map((c) => c._id === _id ? newCard : c))
     }).catch(error => {
       return (`Error: ${error}`)
     })
   }
   function handleCardDelete({ _id }) {
-    apiInstance.deleteCard(_id).then(() => {
+    api.deleteCard(_id).then(() => {
       setCards((state) => state.filter((c) => c._id !== _id))
     }).catch(error => {
       return (`Error: ${error}`)
     })
   }
   function handleAddPlaceSubmit({ name, link }) {
-    apiInstance.addCard({ name, link }).then((newCard) => {
+    api.addCard({ name, link }).then((newCard) => {
       setCards([newCard, ...cards])
     }).catch(error => {
       return (`Error: ${error}`)
@@ -106,7 +106,7 @@ function App() {
   })
 
   useEffect(() => {
-    apiInstance.getInitialCards()
+    api.getInitialCards()
       .then((data) => {
         setCards([...data, ...cards])
       }).catch(error => {
@@ -115,7 +115,7 @@ function App() {
   }, [setCards])
 
   useEffect(() => {
-    apiInstance.getUserData()
+    api.getUserData()
       .then((data) => {
         setCurrentUser(data)
       }).catch(error => {

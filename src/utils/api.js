@@ -77,7 +77,7 @@ class Api {
     }
 }
 
-const apiInstance = new Api("https://around.nomoreparties.co/v1/", {
+const api = new Api("https://around.nomoreparties.co/v1/", {
     method: "GET",
     headers: {
         authorization: "e09604a5-57aa-4b20-9a83-ea66e5c6924b",
@@ -85,4 +85,4 @@ const apiInstance = new Api("https://around.nomoreparties.co/v1/", {
     }
 })
 
-export default apiInstance
+export default api
