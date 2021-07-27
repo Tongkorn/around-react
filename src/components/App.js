@@ -142,7 +142,7 @@ function App() {
       </div>
       {/* <div className="loading">
         <div className="loading__logo"></div>
-      </div> test*/}
+      </div> testtest*/}
     </div >
   );
 }
