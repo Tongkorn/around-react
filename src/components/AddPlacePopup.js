@@ -20,10 +20,10 @@ function AddPlacePopup(props) {
     return (
         <PopupWithForm title="New Place" name="add-card" btnText="Create" isOpen={props.isOpen} loadingBtnText="Saving..." onClose={props.onClose} onSubmit={handleSubmit}>
             <input type="text" name="name" className="popup__input popup__input_type_img-title" placeholder="Title"
-                id="img-input" required onChange={handleAddPlaceName} />
+                id="img-input" required onChange={handleAddPlaceName} value={placeName} />
             <span className="popup__error img-input-error"></span>
             <input type="text" name="link" className="popup__input popup__input_type_link" placeholder="Image link"
-                id="link-input" required onChange={handleAddPlaceLink} />
+                id="link-input" required onChange={handleAddPlaceLink} value={placeLink} />
             <span className="popup__error link-input-error"></span>
         </PopupWithForm>
     );

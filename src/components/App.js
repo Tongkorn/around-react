@@ -8,7 +8,7 @@ import EditAvatarPopup from './EditAvatarPopup'
 import ImagePopup from './ImagePopup'
 import { useState, useEffect } from 'react'
 import { CurrentUserContext } from '../contexts/CurrentUserContext'
-import  api  from '../utils/ApiService'
+import api from '../utils/ApiService'
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false)
@@ -56,15 +56,16 @@ function App() {
       setCurrentUser(user)
       closeAllPopups()
     }).catch(error => {
-      return (`Error: ${error}`)
-    }).finally(() => closeAllPopups())
+      console.log(`Error: ${error}`)
+    })
   }
   function handleUpdateAvatar(event) {
     api.setUserAvatar(event).then((user) => {
       setCurrentUser(user)
+      closeAllPopups()
     }).catch(error => {
-      return (`Error: ${error}`)
-    }).finally(() => closeAllPopups())
+      console.log(`Error: ${error}`)
+    })
   }
   function handleCardLike({ likes, _id }) {
     const isLiked = likes.some(i => i._id === currentUser._id)
@@ -73,22 +74,23 @@ function App() {
     }) : api.addLike(_id).then((newCard) => {
       setCards((state) => state.map((c) => c._id === _id ? newCard : c))
     }).catch(error => {
-      return (`Error: ${error}`)
+      console.log(`Error: ${error}`)
     })
   }
   function handleCardDelete({ _id }) {
     api.deleteCard(_id).then(() => {
       setCards((state) => state.filter((c) => c._id !== _id))
     }).catch(error => {
-      return (`Error: ${error}`)
+      console.log(`Error: ${error}`)
     })
   }
   function handleAddPlaceSubmit({ name, link }) {
     api.addCard({ name, link }).then((newCard) => {
       setCards([newCard, ...cards])
+      closeAllPopups()
     }).catch(error => {
-      return (`Error: ${error}`)
-    }).finally(() => closeAllPopups())
+      console.log(`Error: ${error}`)
+    })
   }
 
   useEffect(() => {
@@ -107,42 +109,41 @@ function App() {
 
   useEffect(() => {
     api.getInitialCards()
-      .then((data) => {
-        setCards([...data, ...cards])
+      .then((res) => {
+        setCards(res)
       }).catch(error => {
-        return (`Error: ${error}`)
+        console.log(`Error: ${error}`)
       })
-  }, [setCards])
+  }, [])
 
   useEffect(() => {
     api.getUserData()
       .then((data) => {
         setCurrentUser(data)
       }).catch(error => {
-        return (`Error: ${error}`)
+        console.log(`Error: ${error}`)
       })
   }, [])
 
   return (
     <div className="root">
       <div className="root__container">
-        <Header />
         <CurrentUserContext.Provider value={currentUser}>
+          <Header />
           <Main onEditProfileClick={handleEditProfileClick} onAddPlaceClick={handleAddPlaceClick} onEditAvatarClick={handleEditAvatarClick} onDeletePlaceClick={handleDeletePlaceClick} onCardClick={handleCardClick} onCardDelete={handleCardDelete} onCardLike={handleCardLike} cards={cards} />
-        </CurrentUserContext.Provider>
-        <Footer />
-        <CurrentUserContext.Provider value={currentUser}>
+          <Footer />
           <EditProfilePopup name={currentUser.name} description={currentUser.about} isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} />
           <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddPlaceSubmit={handleAddPlaceSubmit} />
           <DeletePlacePopup isOpen={isDeletePlacePopupOpen} onClose={closeAllPopups} />
           <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar} />
+          <ImagePopup isOpen={isCardPopupOpen} onClose={closeAllPopups} selectedCard={selectedCard} />
         </CurrentUserContext.Provider >
-        <ImagePopup isOpen={isCardPopupOpen} onClose={closeAllPopups} selectedCard={selectedCard} />
+
       </div>
       {/* <div className="loading">
         <div className="loading__logo"></div>
       </div> test*/}
-    </div>
+    </div >
   );
 }
 

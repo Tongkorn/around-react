@@ -3,18 +3,19 @@ class ApiService {
         this.url = urlToRequestedResource;
         this.options = optionsObj;
         this.groupId = "group-12";
+        this.handlingResponse = res => res.ok ? res.json() : Promise.reject(`Error:${res.status}`)
     }
 
     getUserData() {
         return fetch(`${this.url}${this.groupId}/users/me`,
             this.options
         )
-            .then((res) => res.ok ? res.json() : Promise.reject(`Error:${res.status}`))
+            .then(this.handlingResponse)
     }
 
     getInitialCards() {
         return fetch(`${this.url}/${this.groupId}/cards`, this.options)
-            .then(res => res.ok ? res.json() : Promise.reject(`Error:${res.status}`))
+            .then(this.handlingResponse)
     }
 
     updateUser(userData) {
@@ -26,7 +27,7 @@ class ApiService {
                 about: userData.about
             })
         })
-            .then(res => res.ok ? res.json() : Promise.reject(`Error:${res.status}`))
+            .then(this.handlingResponse)
     }
 
     addCard(cardData) {
@@ -38,7 +39,7 @@ class ApiService {
                 link: cardData.link,
             })
         })
-            .then(res => res.ok ? res.json() : Promise.reject(`Error:${res.status}`))
+            .then(this.handlingResponse)
     }
 
     deleteCard(cardId) {
@@ -46,7 +47,7 @@ class ApiService {
             method: "DELETE",
             headers: this.options.headers
         })
-            .then(res => res.ok ? res.json() : Promise.reject(`Error:${res.status}`))
+            .then(this.handlingResponse)
     }
 
     addLike(cardId) {
@@ -54,7 +55,7 @@ class ApiService {
             method: "PUT",
             headers: this.options.headers
         })
-            .then(res => res.ok ? res.json() : Promise.reject(`Error:${res.status}`))
+            .then(this.handlingResponse)
     }
 
     removeLike(cardId) {
@@ -62,7 +63,7 @@ class ApiService {
             method: "DELETE",
             headers: this.options.headers
         })
-            .then(res => res.ok ? res.json() : Promise.reject(`Error:${res.status}`))
+            .then(this.handlingResponse)
     }
 
     setUserAvatar(avatarLink) {
@@ -73,7 +74,7 @@ class ApiService {
                 avatar: avatarLink.avatar
             }),
         })
-            .then(res => res.ok ? res.json() : Promise.reject(`Error:${res.status}`))
+            .then(this.handlingResponse)
     }
 }
 
